@@ -1,0 +1,49 @@
+#编译前的环境设置
+source /opt/fsl-imx-x11/4.1.15-2.1.0/environment-setup-cortexa7hf-neon-poky-linux-gnueabi
+
+arm-poky-linux-gnueabi-gcc --version
+#开发板网络设置
+ifconfig eth0 192.168.1.2
+
+
+#nfs传输方式
+mount -t nfs -o nolock,nfsvers=3,vers=3 192.168.1.11:/home/lx/nfs  /lx/nfs
+
+cp /lx/nfs/QT_CNTL .
+
+cd /lx/nfs
+
+umount /lx/nfs
+
+
+tar -czvf xx.tar.gz x/
+zip -r x.zip x/
+
+tar -xzvf x.tar.gz
+unzip x.zip
+
+cd /home/root/shell/wifi
+wpa_cli -i wlan0 scan_result
+source ./alientek_usb_wifi_setup.sh -m station -i Lucky -p sys1009sys1010 -d wlan0
+ping www.baidu.com -I wlan0
+
+#gdb调试
+arm-linux-gnueabihf-gcc xxx.c -o xxx -g
+
+#开发板运行
+gdbserver 192.168.1.11:2001 xxx
+
+arm-linux-gnueabihf-gdb xxx
+
+target remote 192.168.1.2:2001
+
+
+
+#U盘传输方式
+mount /dev/sda1 /lx/usb
+cd /lx/usb
+umount /lx/usb
+
+
+ollama run deepseek-r1
+ollama serve

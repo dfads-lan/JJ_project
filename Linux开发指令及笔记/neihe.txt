@@ -1,0 +1,46 @@
+#设备树初始化挂载
+setenv ipaddr 192.168.1.2
+setenv ethaddr 88:a7:0c:d2:49:2f
+setenv gatewayip 192.168.1.1
+setenv netmask 255.255.255.0
+setenv serverip 192.168.1.11
+saveenv
+
+#从 EMMC 启动根文件系统：
+setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw
+saveenv
+
+#从 EMMC 启动 Linux 系统：
+ls mmc 1:1 //检查一下 EMMC 的分区 1 中有没有 zImage 文件和设备树文件
+setenv bootcmd 'mmc dev 1; fatload mmc 1:1 80800000 zImage; fatload mmc 1:1 83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb; bootz 80800000 - 83000000;'
+saveenv
+
+#从网络启动 Linux 系统
+nfs 80800000 192.168.1.11:/home/lx/nfs/zImage
+nfs 83000000 192.168.1.11:/home/lx/nfs/imx6ull-alientek-emmc.dtb
+bootz 80800000 - 83000000
+
+setenv bootcmd 'nfs 80800000 192.168.1.11:/home/lx/nfs/zImage;nfs 83000000 192.168.1.11:/home/lx/nfs/imx6ull-alientek-emmc.dtb;bootz 80800000 - 83000000'
+saveenv
+boot
+
+vi imx6ull-alientek-emmc.dts
+imx6ull-14x14-evk.dts
+
+#编译设备树
+make dtbs
+make zImage
+cp /home/lx/linux/alientek_linux/arch/arm/boot/dts/imx6ull-alientek-emmc.dtb .
+cp /home/lx/linux/alientek_linux/arch/arm/boot/zImage .
+
+
+#查看设备
+cat /proc/devices
+ls /proc/device-tree
+lsmod
+cat /proc/bus/input/devices 
+
+#挂载目录
+cd /lib/modules/4.1.15-g3dc0a4b
+
+/etc/init.d/rcS
