@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>XML/my_haarcascade.xml</file>
+    </qresource>
+</RCC>
