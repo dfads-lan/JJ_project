@@ -1,4 +1,5 @@
 AI_recognition  #视觉AI识别项目
+#以下是MQTT控制系统项目
 spi_sg90        #sg90的spi驱动代码
 driver.zip      #驱动程序
 imx6ull-alientek-emmc.dtb #设备树文件
